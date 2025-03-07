@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.hugodesmarques.fraudservice";
+option java_outer_classname = "FraudServiceProto";
+
+package fraudservice;
+
+// Service definition
+service FraudService {
+  // Get a list of countries
+  rpc GetCountries(CountriesRequest) returns (CountriesResponse);
+
+  // Get transactions by country
+  rpc GetTransactionsByCountry(TransactionsByCountryRequest) returns (TransactionsResponse);
+
+  // Analyze fraud risk
+  rpc AnalyzeFraudRisk(FraudRiskRequest) returns (FraudRiskResponse);
+}
+
+// Request for getting countries
+message CountriesRequest {
+  // Empty request
+}
+
+// Response containing countries
+message CountriesResponse {
+  repeated Country countries = 1;
+}
+
+// Country message
+message Country {
+  string code = 1;
+  string name = 2;
+}
+
+// Request for getting transactions by country
+message TransactionsByCountryRequest {
+  string country_code = 1;
+}
+
+// Response containing transactions
+message TransactionsResponse {
+  repeated Transaction transactions = 1;
+}
+
+// Transaction message
+message Transaction {
+  string id = 1;
+  double amount = 2;
+  string currency = 3;
+  string merchant = 4;
+  string transaction_date = 5;
+  string card_number_last_four = 6;
+  TransactionType type = 7;
+}
+
+// Transaction type enum
+enum TransactionType {
+  UNKNOWN = 0;
+  PURCHASE = 1;
+  REFUND = 2;
+  WITHDRAWAL = 3;
+  DEPOSIT = 4;
+}
+
+// Request for analyzing fraud risk
+message FraudRiskRequest {
+  Country country = 1;
+  repeated Transaction transactions = 2;
+}
+
+// Response containing fraud risk analysis
+message FraudRiskResponse {
+  repeated RiskAssessment risk_assessments = 1;
+}
+
+// Risk assessment for a transaction
+message RiskAssessment {
+  string transaction_id = 1;
+  RiskLevel risk_level = 2;
+  repeated string risk_factors = 3;
+  double risk_score = 4;
+}
+
+// Risk level enum
+enum RiskLevel {
+  LOW = 0;
+  MEDIUM = 1;
+  HIGH = 2;
+  CRITICAL = 3;
+}
