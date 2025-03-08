@@ -4,7 +4,7 @@ services:
   # gRPC Service application
   fraud-service:
     build:
-      context: ./fraud-service-demo
+      context: ./fraud-service
       dockerfile: Dockerfile
     ports:
       - "8080:8080"  # Spring Boot web port

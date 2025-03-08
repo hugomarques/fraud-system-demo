@@ -1,29 +1,38 @@
 plugins {
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
     id 'java'
-    id 'org.springframework.boot' version '3.4.3'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.google.protobuf' version '0.9.4'
 }
 
 group = 'com.hugodesmarques'
 version = '0.0.1-SNAPSHOT'
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
+sourceCompatibility = '21'
 
 repositories {
+    mavenLocal()  // Allows Gradle to find locally published artifacts
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation('com.hugodesmarques:fraud-service:0.0.1-SNAPSHOT') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
+        exclude group: 'net.devh', module: 'grpc-server-spring-boot-autoconfigure' // Exclude gRPC Server
+    }
+    // Spring Boot core (CommandLineRunner support)
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    // gRPC client support for Spring Boot
+    implementation 'net.devh:grpc-client-spring-boot-starter:2.15.0.RELEASE'
+    implementation 'io.grpc:grpc-netty-shaded:1.58.0'  // Use the correct version of gRPC
+    implementation 'io.grpc:grpc-protobuf:1.58.0'  // Required for protobuf support
+    implementation 'io.grpc:grpc-stub:1.58.0'  // Required for the stub
+    implementation 'javax.annotation:javax.annotation-api:1.3.2' // For annotations like @Nullable
+
+    // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }

@@ -5,6 +5,6 @@ RUN gradle clean bootJar -x test
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=build /app/build/libs/*.jar fraud-service.jar
-EXPOSE 8080 9090
-ENTRYPOINT ["java", "-jar", "fraud-service.jar"]
+COPY --from=build /app/build/libs/*.jar fraud-client.jar
+EXPOSE 8081
+ENTRYPOINT ["java", "-jar", "fraud-client.jar"]
